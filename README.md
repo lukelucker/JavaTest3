@@ -1,1 +1,1 @@
-# JavaTest3
+Test numer 3 z Javy. Łukasz Grycko
