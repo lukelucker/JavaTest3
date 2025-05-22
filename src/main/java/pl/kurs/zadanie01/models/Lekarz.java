@@ -1,7 +1,7 @@
 package pl.kurs.zadanie01.models;
-import java.util.Objects;
+import java.util.*;
 
-public class Lekarz implements Identyfikowalny{
+public class Lekarz implements RejestratorWizyt, Identyfikowalny{
 
     private int numerIdentyfikacyjny;
     private String nazwisko;
@@ -10,6 +10,7 @@ public class Lekarz implements Identyfikowalny{
     private String dataUrodzenia;
     private String nip;
     private String pesel;
+    private List<Wizyta> wizyty = new ArrayList<>();
 
     public Lekarz(int numerIdentyfikacyjny, String nazwisko, String imie, String specjalnosc, String dataUrodzenia, String nip, String pesel) {
         this.numerIdentyfikacyjny = numerIdentyfikacyjny;
@@ -21,11 +22,27 @@ public class Lekarz implements Identyfikowalny{
         this.pesel = pesel;
     }
 
-    public int getNumerIdentyfikacyjny() {
-        return numerIdentyfikacyjny;
+    @Override
+    public void dodajWizyte(Wizyta wizyta) {
+        wizyty.add(wizyta);
     }
 
 
+    public static List<Lekarz> filtrowaniePoNIP(List<Lekarz> listaLekarzy) {
+        Set<String> unikalneNIPy = new HashSet<>();
+        List<Lekarz> przefiltrowaniLekarze = new ArrayList<>();
+        for (Lekarz lekarz : listaLekarzy) {
+            if (!unikalneNIPy.contains(lekarz.getNip())) {
+                unikalneNIPy.add(lekarz.getNip());
+                przefiltrowaniLekarze.add(lekarz);
+            }
+        }
+        return przefiltrowaniLekarze;
+    }
+
+    public int getNumerIdentyfikacyjny() {
+        return numerIdentyfikacyjny;
+    }
 
     public String getNazwisko() {
         return nazwisko;
@@ -49,6 +66,10 @@ public class Lekarz implements Identyfikowalny{
 
     public String getPesel() {
         return pesel;
+    }
+
+    public List<Wizyta> getWizyty() {
+        return wizyty;
     }
 
     @Override

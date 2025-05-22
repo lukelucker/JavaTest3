@@ -1,14 +1,17 @@
 package pl.kurs.zadanie01.models;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-public class Pacjent implements Identyfikowalny {
+public class Pacjent implements RejestratorWizyt, Identyfikowalny {
 
     private int numerIdentyfikacyjny;
     private String nazwisko;
     private String imie;
     private String pesel;
     private String dataUrodzenia;
+    private List<Wizyta> wizyty = new ArrayList<>();
 
     public Pacjent(int numerIdentyfikacyjny, String nazwisko, String imie, String pesel, String dataUrodzenia) {
         this.numerIdentyfikacyjny = numerIdentyfikacyjny;
@@ -16,6 +19,11 @@ public class Pacjent implements Identyfikowalny {
         this.imie = imie;
         this.pesel = pesel;
         this.dataUrodzenia = dataUrodzenia;
+    }
+
+    @Override
+    public void dodajWizyte(Wizyta wizyta) {
+        wizyty.add(wizyta);
     }
 
     public int getNumerIdentyfikacyjny() {
@@ -36,6 +44,10 @@ public class Pacjent implements Identyfikowalny {
 
     public String getDataUrodzenia() {
         return dataUrodzenia;
+    }
+
+    public List<Wizyta> getWizyty() {
+        return wizyty;
     }
 
     @Override

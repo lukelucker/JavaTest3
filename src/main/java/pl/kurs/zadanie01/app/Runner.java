@@ -16,48 +16,46 @@ public class Runner {
             return new Lekarz(Integer.parseInt(dane[0]), dane[1], dane[2], dane[3], dane[4], dane[5], dane[6]);
         });
 
+        listaLekarzy = Lekarz.filtrowaniePoNIP(listaLekarzy);
+
         List<Pacjent> listaPacjentow = OdczytPlikow.wczytajZPliku("pacjenci.txt", linia -> {
             String[] dane = linia.split(" ");
             return new Pacjent(Integer.parseInt(dane[0]), dane[1], dane[2], dane[3], dane[4]);
         });
 
-        List<Wizyta> listaWizyt = OdczytPlikow.wczytajZPliku("wizyty.txt", linia -> {
-            String[] dane = linia.split(" ");
-            return new Wizyta(Integer.parseInt(dane[0]), Integer.parseInt(dane[1]), dane[2]);
-        });
+        List<String> linieWizyt = OdczytPlikow.wczytajJakoLinie("wizyty.txt");
+        List<Wizyta> listaWizyt = Wizyta.utworzWizyty(linieWizyt, listaLekarzy, listaPacjentow);
 
-        Statystyki statystyki = new Statystyki(listaWizyt, listaLekarzy, listaPacjentow);
-
-        Lekarz lekarzZNajwiekszaLiczbaWizyt = statystyki.znajdzObiektZNajwiekszaLiczbaWizyt(listaLekarzy, statystyki.getWizytyNaLekarza());
+        Lekarz lekarzZNajwiekszaLiczbaWizyt = Statystyki.obiektZNajwiekszaLiczbaWizyt(listaLekarzy, lekarz -> lekarz.getWizyty().size());
         System.out.println(lekarzZNajwiekszaLiczbaWizyt);
 
         System.out.println("-----------------------");
 
-        Pacjent pacjentZNajwiekszaLiczbaWizyt = statystyki.znajdzObiektZNajwiekszaLiczbaWizyt(listaPacjentow, statystyki.getWizytyNaPacjenta());
+        Pacjent pacjentZNajwiekszaLiczbaWizyt = Statystyki.obiektZNajwiekszaLiczbaWizyt(listaPacjentow, pacjent -> pacjent.getWizyty().size());
         System.out.println(pacjentZNajwiekszaLiczbaWizyt);
 
-        String najpopularniejszaSpecjalizacja = statystyki.znajdzNajpopularniejszaSpecjalizacje();
+        String najpopularniejszaSpecjalizacja = Statystyki.najpopularniejszaSpecjalizacja(listaLekarzy);
         System.out.println(najpopularniejszaSpecjalizacja);
 
-        int najczestszyRokWizyt = statystyki.znajdzRokZNajwiekszaLiczbaWizyt();
-        System.out.println(najczestszyRokWizyt);
+        int najpopularniejszyRok = Statystyki.rokZNajwiekszaLiczbaWizyt(listaWizyt);
+        System.out.println(najpopularniejszyRok);
 
-        List<Lekarz> top5NajstarszychLekarzy = statystyki.znajdz5NajstarszychLekarzy(listaLekarzy);
+        List<Lekarz> top5NajstarszychLekarzy = Statystyki.top5NajstarszychLekarzy(listaLekarzy);
         top5NajstarszychLekarzy.forEach(System.out::println);
 
         System.out.println("-----------------------");
 
-        List<Lekarz> top5LekarzyZNajwiekszaLiczbaWizyt = statystyki.znajdz5LekarzyZNajwiekszaLiczbaWizyt(listaLekarzy);
-        top5LekarzyZNajwiekszaLiczbaWizyt.forEach(System.out::println);
+        List<Lekarz> top5LekarzyZWizytami = Statystyki.top5LekarzyZWizytami(listaLekarzy);
+        top5LekarzyZWizytami.forEach(System.out::println);
 
         System.out.println("-----------------------");
 
-        List<Pacjent> pacjenciZMin5Lekarzami = statystyki.znajdzPacjentowZMinimum5Lekarzami(listaPacjentow);
-        pacjenciZMin5Lekarzami.forEach(System.out::println);
+        List<Pacjent> pacjenciZMinimum5Lekarzami = Statystyki.znajdzPacjentowZMinimum5Lekarzami(listaPacjentow);
+        pacjenciZMinimum5Lekarzami.forEach(System.out::println);
 
         System.out.println("-----------------------");
 
-        List<Lekarz> lekarzeZJednymPacjentem = statystyki.znajdzLekarzyZJednymPacjentem(listaLekarzy);
+        List<Lekarz> lekarzeZJednymPacjentem = Statystyki.lekarzeZJednymPacjentem(listaLekarzy);
         lekarzeZJednymPacjentem.forEach(System.out::println);
     }
 }
